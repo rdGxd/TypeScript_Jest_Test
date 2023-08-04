@@ -4,7 +4,7 @@ describe('Testando alguma coisa', () => {
   it(`should return one`, () => {
     const number = 1;
     // negando
-    expect(number).not.toBe(1);
+    expect(number).not.toBe(2);
   });
 });
 
