@@ -10,7 +10,7 @@ describe('Product', () => {
   // Limpando os mocks depois de cada teste
   afterEach(() => jest.clearAllMocks());
 
-  it('should return undefined', () => {
+  it('should have properties name and price', () => {
     // Sempre vamos chamar a classe que está sendo testada de SUT -> System under test
     const sut = createSut('Camiseta', 49.9);
 
