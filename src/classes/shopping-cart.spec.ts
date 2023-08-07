@@ -1,6 +1,6 @@
-import { ShoppingCart } from './shopping-cart';
 import { Discount } from './discount';
 import { CartItem } from './interfaces/cart-item';
+import { ShoppingCart } from './shopping-cart';
 
 const createSut = () => {
   const discountMock = createDiscountMock();
@@ -36,6 +36,8 @@ const createSutWithProducts = () => {
 };
 
 describe('ShoppingCart', () => {
+  afterEach(() => jest.clearAllMocks());
+
   // Teste do isEmpty()
   it('should be an empty cart when no product is added', () => {
     const { sut } = createSut();
@@ -65,12 +67,32 @@ describe('ShoppingCart', () => {
   });
 
   // Teste para remover produtos
-  it('should remo products', () => {
+  it('should remove products', () => {
     const { sut } = createSutWithProducts();
     expect(sut.items.length).toBe(2);
     sut.removeItem(1);
     expect(sut.items.length).toBe(1);
     sut.removeItem(0);
     expect(sut.isEmpty()).toBe(true);
+  });
+
+  // Teste de integração do shoppingCart com o desconto
+  it('should call discount.calculate once when totalWithDiscount is called', () => {
+    const { sut, discountMock } = createSutWithProducts();
+    // Criando o spy
+    const discountMockSpy = jest.spyOn(discountMock, 'calculate');
+    sut.totalWithDiscount();
+    // Checando quantas vezes o método foi chamado
+    expect(discountMockSpy).toHaveBeenCalledTimes(1);
+  });
+
+  // Testando integração entre Shopping-cart com o Discount
+  it('should call discount.calculate with total price when totalWithDiscount is called', () => {
+    const { sut, discountMock } = createSutWithProducts();
+    // Criando o spy
+    const discountMockSpy = jest.spyOn(discountMock, 'calculate');
+    sut.totalWithDiscount();
+    // Checando com o que o método foi chamado
+    expect(discountMockSpy).toHaveBeenCalledWith(sut.total());
   });
 });
